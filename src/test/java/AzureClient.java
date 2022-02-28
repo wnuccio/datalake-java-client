@@ -4,10 +4,6 @@ import com.azure.storage.file.datalake.DataLakeServiceClient;
 import com.azure.storage.file.datalake.DataLakeServiceClientBuilder;
 import com.azure.storage.file.datalake.models.FileSystemItem;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 public class AzureClient {
 
     private DataLakeServiceClient dataLakeServiceClient;
@@ -17,17 +13,10 @@ public class AzureClient {
     }
 
     private StorageSharedKeyCredential getCredentials() {
-        Properties props = new Properties();
-        try {
-            props.load(new FileInputStream("./credentials.txt"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        String accountName = props.getProperty("accountName");
-        String accountKey = props.getProperty("accountKey");
-        return new StorageSharedKeyCredential(accountName, accountKey);
+        Credentials credentials = Credentials.readFrom("./credentials.txt");
+        return new StorageSharedKeyCredential(credentials.accountName(), credentials.accountKey());
     }
+
 
     public DataLakeServiceClient dataLakeClient() {
         if (dataLakeServiceClient != null) return dataLakeServiceClient;
