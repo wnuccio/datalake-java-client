@@ -12,20 +12,14 @@ public class AzureClient {
         return "https://" + accountName + ".dfs.core.windows.net";
     }
 
-    private StorageSharedKeyCredential getCredentials() {
-        Credentials credentials = Credentials.readFrom("./credentials.txt");
-        return new StorageSharedKeyCredential(credentials.accountName(), credentials.accountKey());
-    }
-
-
     public DataLakeServiceClient dataLakeClient() {
         if (dataLakeServiceClient != null) return dataLakeServiceClient;
 
-        StorageSharedKeyCredential credentials = getCredentials();
-        String endpoint = getEndpoint(credentials.getAccountName());
+        Credentials credentials = Credentials.readFrom("./credentials.txt");
+        String endpoint = getEndpoint(credentials.accountName());
         dataLakeServiceClient = new DataLakeServiceClientBuilder()
-                .credential(credentials)
                 .endpoint(endpoint)
+                .credential(new StorageSharedKeyCredential(credentials.accountName(), credentials.accountKey()))
                 .buildClient();
 
         return dataLakeServiceClient;
@@ -43,7 +37,7 @@ public class AzureClient {
 
     private static void waitSomeSeconds(int seconds) {
         try {
-            Thread.sleep(seconds * 1000);
+            Thread.sleep((long)seconds * 1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
