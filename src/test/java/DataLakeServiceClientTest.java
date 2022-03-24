@@ -14,7 +14,8 @@ class DataLakeServiceClientTest {
 
     @BeforeEach
     void setUp() {
-        azureClientFactory = new AzureClientFactory();
+        Credentials credentials = Credentials.readFrom("./credentials.txt");
+        azureClientFactory = new AzureClientFactory(credentials);
         dataLakeClient = azureClientFactory.dataLakeClient();
 
         azureClientFactory.deleteAllContainers();

@@ -6,7 +6,12 @@ import com.azure.storage.file.datalake.models.FileSystemItem;
 
 public class AzureClientFactory {
 
+    private final Credentials credentials;
     private DataLakeServiceClient dataLakeServiceClient;
+
+    public AzureClientFactory(Credentials credentials) {
+        this.credentials = credentials;
+    }
 
     private String getEndpoint(String accountName) {
         return "https://" + accountName + ".dfs.core.windows.net";
@@ -15,7 +20,6 @@ public class AzureClientFactory {
     public DataLakeServiceClient dataLakeClient() {
         if (dataLakeServiceClient != null) return dataLakeServiceClient;
 
-        Credentials credentials = Credentials.readFrom("./credentials.txt");
         String endpoint = getEndpoint(credentials.accountName());
         dataLakeServiceClient = new DataLakeServiceClientBuilder()
                 .endpoint(endpoint)
