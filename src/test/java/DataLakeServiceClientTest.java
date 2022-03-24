@@ -9,20 +9,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DataLakeServiceClientTest {
 
-    private AzureClient azureClient;
+    private AzureClientFactory azureClientFactory;
     private DataLakeServiceClient dataLakeClient;
 
     @BeforeEach
     void setUp() {
-        azureClient = new AzureClient();
-        dataLakeClient = azureClient.dataLakeClient();
+        azureClientFactory = new AzureClientFactory();
+        dataLakeClient = azureClientFactory.dataLakeClient();
 
-        azureClient.deleteAllContainers();
+        azureClientFactory.deleteAllContainers();
     }
 
     @AfterEach
     void tearDown() {
-        azureClient.deleteAllContainers();
+        azureClientFactory.deleteAllContainers();
     }
 
     @Test

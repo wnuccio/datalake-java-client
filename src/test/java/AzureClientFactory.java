@@ -4,7 +4,7 @@ import com.azure.storage.file.datalake.DataLakeServiceClient;
 import com.azure.storage.file.datalake.DataLakeServiceClientBuilder;
 import com.azure.storage.file.datalake.models.FileSystemItem;
 
-public class AzureClient {
+public class AzureClientFactory {
 
     private DataLakeServiceClient dataLakeServiceClient;
 
