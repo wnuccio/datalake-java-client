@@ -27,10 +27,10 @@ public class StorageAccountProperties {
         return new StorageSharedKeyCredential(storageAccountName(), storageAccountKey());
     }
 
-    public static StorageAccountProperties readFrom(String path) {
+    public static StorageAccountProperties readFromLocalFile() {
         Properties props = new Properties();
         try {
-            props.load(new FileInputStream(path));
+            props.load(new FileInputStream("./storageAccountProperties.txt"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

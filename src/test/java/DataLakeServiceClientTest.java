@@ -14,7 +14,7 @@ class DataLakeServiceClientTest {
 
     @BeforeEach
     void setUp() {
-        StorageAccountProperties properties = StorageAccountProperties.readFrom("./storageAccountProperties.txt");
+        StorageAccountProperties properties = StorageAccountProperties.readFromLocalFile();
         azureClientFactory = new AzureClientFactory(properties);
         dataLakeClient = azureClientFactory.dataLakeClient();
 
