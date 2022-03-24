@@ -1,24 +1,23 @@
 import com.azure.core.http.rest.PagedIterable;
-import com.azure.storage.common.StorageSharedKeyCredential;
 import com.azure.storage.file.datalake.DataLakeServiceClient;
 import com.azure.storage.file.datalake.DataLakeServiceClientBuilder;
 import com.azure.storage.file.datalake.models.FileSystemItem;
 
 public class AzureClientFactory {
 
-    private final Credentials credentials;
+    private final StorageAccountProperties properties;
     private DataLakeServiceClient dataLakeServiceClient;
 
-    public AzureClientFactory(Credentials credentials) {
-        this.credentials = credentials;
+    public AzureClientFactory(StorageAccountProperties properties) {
+        this.properties = properties;
     }
 
     public DataLakeServiceClient dataLakeClient() {
         if (dataLakeServiceClient != null) return dataLakeServiceClient;
 
         dataLakeServiceClient = new DataLakeServiceClientBuilder()
-                .endpoint(credentials.getEndpoint())
-                .credential(new StorageSharedKeyCredential(credentials.storageAccountName(), credentials.storageAccountKey()))
+                .endpoint(properties.getEndpoint())
+                .credential(properties.sharedKeyCredentials())
                 .buildClient();
 
         return dataLakeServiceClient;
@@ -26,17 +25,17 @@ public class AzureClientFactory {
 
     public void deleteAllContainers() {
         PagedIterable<FileSystemItem> containers = dataLakeClient().listFileSystems();
-        if (containers.stream().count() == 0) return;
+        if (containers.stream().findAny().isEmpty()) return;
 
         System.out.println("Delete all containers from Azure ... ");
         containers.stream().map(FileSystemItem::getName).forEach(dataLakeClient()::deleteFileSystem);
-        waitSomeSeconds(3);
+        waitSomeSeconds();
         System.out.println("Delete all containers from Azure - Done");
     }
 
-    private static void waitSomeSeconds(int seconds) {
+    private static void waitSomeSeconds() {
         try {
-            Thread.sleep((long)seconds * 1000);
+            Thread.sleep(3000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

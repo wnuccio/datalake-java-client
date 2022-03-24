@@ -1,11 +1,13 @@
+import com.azure.storage.common.StorageSharedKeyCredential;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Credentials {
-    private Properties properties;
+public class StorageAccountProperties {
+    private final Properties properties;
 
-    public Credentials(Properties properties) {
+    public StorageAccountProperties(Properties properties) {
         this.properties = properties;
     }
 
@@ -21,7 +23,11 @@ public class Credentials {
         return "https://" + storageAccountName() + ".dfs.core.windows.net";
     }
 
-    public static Credentials readFrom(String path) {
+    public StorageSharedKeyCredential sharedKeyCredentials() {
+        return new StorageSharedKeyCredential(storageAccountName(), storageAccountKey());
+    }
+
+    public static StorageAccountProperties readFrom(String path) {
         Properties props = new Properties();
         try {
             props.load(new FileInputStream(path));
@@ -29,6 +35,6 @@ public class Credentials {
             throw new RuntimeException(e);
         }
 
-        return new Credentials(props);
+        return new StorageAccountProperties(props);
     }
 }

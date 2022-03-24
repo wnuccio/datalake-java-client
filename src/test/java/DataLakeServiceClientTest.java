@@ -14,8 +14,8 @@ class DataLakeServiceClientTest {
 
     @BeforeEach
     void setUp() {
-        Credentials credentials = Credentials.readFrom("./credentials.txt");
-        azureClientFactory = new AzureClientFactory(credentials);
+        StorageAccountProperties properties = StorageAccountProperties.readFrom("./storageAccountProperties.txt");
+        azureClientFactory = new AzureClientFactory(properties);
         dataLakeClient = azureClientFactory.dataLakeClient();
 
         azureClientFactory.deleteAllContainers();
@@ -34,7 +34,7 @@ class DataLakeServiceClientTest {
         dataLakeClient.createFileSystem("a-test-container");
 
         assertEquals(1, containers.stream().count());
-        FileSystemItem retrievedContainer = containers.stream().findFirst().get();
+        FileSystemItem retrievedContainer = containers.stream().findFirst().orElseThrow();
         assertEquals("a-test-container", retrievedContainer.getName());
     }
 }
