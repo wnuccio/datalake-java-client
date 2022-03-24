@@ -13,17 +13,12 @@ public class AzureClientFactory {
         this.credentials = credentials;
     }
 
-    private String getEndpoint(String accountName) {
-        return "https://" + accountName + ".dfs.core.windows.net";
-    }
-
     public DataLakeServiceClient dataLakeClient() {
         if (dataLakeServiceClient != null) return dataLakeServiceClient;
 
-        String endpoint = getEndpoint(credentials.accountName());
         dataLakeServiceClient = new DataLakeServiceClientBuilder()
-                .endpoint(endpoint)
-                .credential(new StorageSharedKeyCredential(credentials.accountName(), credentials.accountKey()))
+                .endpoint(credentials.getEndpoint())
+                .credential(new StorageSharedKeyCredential(credentials.storageAccountName(), credentials.storageAccountKey()))
                 .buildClient();
 
         return dataLakeServiceClient;

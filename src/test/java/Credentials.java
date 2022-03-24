@@ -9,6 +9,18 @@ public class Credentials {
         this.properties = properties;
     }
 
+    public String storageAccountKey() {
+        return properties.getProperty("storageAccountKey");
+    }
+
+    public String storageAccountName() {
+        return properties.getProperty("storageAccountName");
+    }
+
+    public String getEndpoint() {
+        return "https://" + storageAccountName() + ".dfs.core.windows.net";
+    }
+
     public static Credentials readFrom(String path) {
         Properties props = new Properties();
         try {
@@ -19,13 +31,4 @@ public class Credentials {
 
         return new Credentials(props);
     }
-
-    public String accountKey() {
-        return properties.getProperty("accountKey");
-    }
-
-    public String accountName() {
-        return properties.getProperty("accountName");
-    }
-
 }
